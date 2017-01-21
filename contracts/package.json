@@ -15,8 +15,7 @@
     "solc": "^0.4.8",
     "web3": "^0.18.2"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

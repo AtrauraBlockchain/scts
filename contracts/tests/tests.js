@@ -245,7 +245,7 @@ async.series([
             }
          });
       });
-      /*it('SubProduct 1 should be consumed.', function(done) {
+      it('SubProduct 1 should be consumed.', function(done) {
         expect(subProduct1.isConsumed()).to.equal(true);
         done();
       });
@@ -258,7 +258,7 @@ async.series([
         expect(superProduct).to.not.equal("undefined");
         expect(web3.toAscii(superProduct.name()).replace(/[^\w\s]/gi, '')).to.equal("SuperProduct");
         done();
-      });*/
+      });
     });
     callback();
   }
