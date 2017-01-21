@@ -11,6 +11,10 @@ var accounts = web3.eth.accounts;
 
 var database;
 var productFactory;
+
+var productABI = require('../abi/productABI.js')
+var productContract = web3.eth.contract(productABI);
+
 async.series([
   function(callback) {
     describe('Deploy Database Contract.', function() {
@@ -80,8 +84,7 @@ async.series([
          });
       });
       it('Contract must appear in the database.', function(done) {
-        var productABI = require('../abi/productABI.js')
-        product = web3.eth.contract(productABI).at(database.products(0));
+        product = productContract.at(database.products(0));
         expect(product.DATABASE_CONTRACT()).to.equal(database.address);
         done();
       });
@@ -119,8 +122,7 @@ async.series([
          });
       });
       it('Contract must appear in the database.', function(done) {
-        var productABI = require('../abi/productABI.js')
-        product = web3.eth.contract(productABI).at(database.products(1));
+        product = productContract.at(database.products(1));
         expect(product.DATABASE_CONTRACT()).to.equal(database.address);
         done();
       });
@@ -135,35 +137,46 @@ async.series([
       });
     });
     describe('Add a new action to Test Product 1.', function() {
-      product = web3.eth.contract(productABI).at(database.products(0), function(e, res) {console.log(e);});
-      let description = "Second action";
-      let newProductsNames = [];
-      let consumed = false;
-      let lon = 39.952583 * 10^10;
-      let lat = -75.165222 * 10^10;
-      it('Contract second action should not be undefined', function(done) {
-        product.addAction(
-          description,
-          lon,
-          lat,
-          newProductsNames,
-          consumed,
-         {
-           from: accounts[0],
-           gas: '4700000'
-         },
-         function (e, txHash){
-            if (typeof txHash !== 'undefined') {
-              done();
-              callback();
-            }
-         });
-      });
-      it('Product\'s first action should be "Second Action".', function(done) {
-        let firstAction = product.actions(1);
-        expect(web3.toAscii(firstAction[1]).replace(/[^\w\s]/gi, '')).to.equal("Second action");
-        done();
-      });
+      let productAddress;
+      async.series([
+        function(callback) {
+          database.products(0, function(err, res) {
+            productAddress = res;
+            callback();
+          });
+        },
+        function(callback) {
+          product = productContract.at(productAddress);
+          let description = "Second action";
+          let newProductsNames = [];
+          let consumed = false;
+          let lon = 39.952583 * 10^10;
+          let lat = -75.165222 * 10^10;
+          it('Contract second action should not be undefined', function(done) {
+            product.addAction(
+              description,
+              lon,
+              lat,
+              newProductsNames,
+              consumed,
+             {
+               from: accounts[0],
+               gas: '4700000'
+             },
+             function (e, txHash){
+                if (typeof txHash !== 'undefined') {
+                  done();
+                  callback();
+                }
+             });
+          });
+          it('Product\'s first action should be "Second Action".', function(done) {
+            let firstAction = product.actions(1);
+            expect(web3.toAscii(firstAction[1]).replace(/[^\w\s]/gi, '')).to.equal("Second action");
+            done();
+          });
+        }
+      ]);
     });
   }
 ]);
