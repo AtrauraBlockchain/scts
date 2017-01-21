@@ -40,9 +40,9 @@ contract Product {
     bytes32 description;
 
     // @dev Longitude x10^10 where the Action is done.
-    uint lon;
+    int lon;
     // @dev Latitude x10^10 where the Action is done.
-    uint lat;
+    int lat;
 
     // @dev Instant of time when the Action is done.
     uint timestamp;
@@ -87,7 +87,7 @@ contract Product {
      @param _lat Latitude x10^10 where the Product is created.
      @param _DATABASE_CONTRACT Reference to its database contract
      @param _PRODUCT_FACTORY Reference to its product factory */
-  function Product(bytes32 _name, bytes32 _additionalInformation, address[] _parentProducts, uint _lon, uint _lat, address _DATABASE_CONTRACT, address _PRODUCT_FACTORY) {
+  function Product(bytes32 _name, bytes32 _additionalInformation, address[] _parentProducts, int _lon, int _lat, address _DATABASE_CONTRACT, address _PRODUCT_FACTORY) {
     name = _name;
     isConsumed = false;
     parentProducts = _parentProducts;
@@ -124,7 +124,7 @@ contract Product {
      @param _newProductsAdditionalInformation In case that this Action creates more products from
             this Product, the additional information of the new products should be provided here.
      @param _consumed True if the product becomes consumed after the action. */
-  function addAction(bytes32 description, uint lon, uint lat, bytes32[] newProductsNames, bytes32[] newProductsAdditionalInformation, bool _consumed) notConsumed {
+  function addAction(bytes32 description, int lon, int lat, bytes32[] newProductsNames, bytes32[] newProductsAdditionalInformation, bool _consumed) notConsumed {
     if (newProductsNames.length != newProductsAdditionalInformation.length) throw;
 
     Action memory action;
@@ -154,21 +154,32 @@ contract Product {
      @param newProductAdditionalInformation Additional information of the new product resulting of the merge.
      @param _lon Longitude x10^10 where the merge is done.
      @param _lat Latitude x10^10 where the merge is done. */
-  function merge(address[] otherProducts, bytes32 newProductName, bytes32 newProductAdditionalInformation, uint lon, uint lat) notConsumed {
+  function merge(address[] otherProducts, bytes32 newProductName, bytes32 newProductAdditionalInformation, int lon, int lat) notConsumed {
     ProductFactory productFactory = ProductFactory(PRODUCT_FACTORY);
     address newProduct = productFactory.createProduct(newProductName, newProductAdditionalInformation, otherProducts, lon, lat, DATABASE_CONTRACT);
 
-    this.collaborateInMerge(newProduct);
+    this.collaborateInMerge(newProduct, lon, lat);
     for (uint i = 0; i < otherProducts.length; ++i) {
       Product prod = Product(otherProducts[i]);
-      prod.collaborateInMerge(newProduct);
+      prod.collaborateInMerge(newProduct, lon, lat);
     }
   }
 
   /* @notice Function to collaborate in a merge with some products to build a new one.
      @param newProductsAddress Address of the new product resulting of the merge. */
-  function collaborateInMerge(address newProductAddress) notConsumed {
+  function collaborateInMerge(address newProductAddress, int lon, int lat) notConsumed {
     childProducts.push(newProductAddress);
+
+    Action memory action;
+    action.handler = this;
+    action.description = "Collaborate in merge";
+    action.lon = lon;
+    action.lat = lat;
+    action.timestamp = now;
+    action.blockNumber = block.number;
+
+    actions.push(action);
+
     this.consume();
   }
 
@@ -205,7 +216,7 @@ contract ProductFactory {
        @param _lon Longitude x10^10 where the Product is created.
        @param _lat Latitude x10^10 where the Product is created.
        @param _DATABASE_CONTRACT Reference to its database contract */
-    function createProduct(bytes32 _name, bytes32 _additionalInformation, address[] _parentProducts, uint _lon, uint _lat, address DATABASE_CONTRACT) returns(address) {
+    function createProduct(bytes32 _name, bytes32 _additionalInformation, address[] _parentProducts, int _lon, int _lat, address DATABASE_CONTRACT) returns(address) {
       return new Product(_name, _additionalInformation, _parentProducts, _lon, _lat, DATABASE_CONTRACT, this);
     }
 }
