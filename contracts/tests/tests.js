@@ -56,7 +56,7 @@ async.series([
   },
   function(callback) {
     describe('Create a product successfully.', function() {
-      let product;
+      var product;
       var productName = "Test Product 1";
       let parentProducts = [];
       let lon = 39.952583 * 10^10;
@@ -96,7 +96,6 @@ async.series([
       });
     });
     describe('Create an other product successfully.', function() {
-      let product;
       productName = "Test Product 2";
       let parentProducts = [];
       let lon = 39.952583 * 10^10;
@@ -136,7 +135,7 @@ async.series([
       });
     });
     describe('Add a new action to Test Product 1.', function() {
-      let product = web3.eth.contract(productABI).at(database.products(0));
+      product = web3.eth.contract(productABI).at(database.products(0));
       let description = "Second action";
       let newProductsNames = [];
       let consumed = false;
