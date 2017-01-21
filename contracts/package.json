@@ -23,5 +23,5 @@
     "test": "./node_modules/.bin/mocha tests --reporter spec"
   },
   "author": "@anrodon",
-  "license": "GNU v3"
+  "license": "GNU"
 }

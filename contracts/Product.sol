@@ -2,30 +2,64 @@ pragma solidity ^0.4.7;
 
 import "./Database.sol";
 
+/*
+    Copyright 2016, Andreu Rodríguez i Donaire
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* @title Product Contract
+   @author Andreu Rodíguez i Donaire
+   @dev This contract represents a product to be tracked in the TODO put name of platform **
+   platform. This product lets the handlers to register actions on it or even combine
+   it with other products. */
+
+
+ /* @dev Constructor for a Product */
 contract Product {
+  // @dev Reference to its database contract.
   address public DATABASE_CONTRACT;
+  // @dev Reference to its product factory
   address public PRODUCT_FACTORY;
 
+  // @dev This struct represents an action realized by a handler on the product.
   struct Action {
+    //@dev address of the individual or the organization who realizes the action.
     address handler;
+    //@dev description of the action.
     bytes32 description;
 
-    // Longitude x10^10 & Latitude x10^10 where the Action is done
+    // @dev Longitude x10^10 where the Action is done
     uint lon;
+    // @dev Latitude x10^10 where the Action is done
     uint lat;
 
+    // @dev Instant of time when the Action is done
     uint timestamp;
+    // @dev Block when the Action is done
     uint blockNumber;
   }
 
+  // @dev if the Product is consumed the transaction can't be done
   modifier notConsumed {
     if (isConsumed)
       throw;
     _;
   }
 
+  // @dev addresses of the products which were used to build this Product
   address[] public parentProducts;
-  address[] public childProducts;
 
   bool public isConsumed;
 
