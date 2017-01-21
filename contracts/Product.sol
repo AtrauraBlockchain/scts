@@ -101,6 +101,8 @@ contract Product {
   }
 
   function addAction(bytes32 description, uint lon, uint lat, bytes32[] newProductsNames, bytes32[] newProductsAdditionalInformation, bool _consumed) notConsumed {
+    if (newProductsNames.length != newProductsAdditionalInformation.length) throw;
+
     Action memory action;
     action.handler = msg.sender;
     action.description = description;

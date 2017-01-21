@@ -16,6 +16,7 @@ var productFactory;
 
 var productABI = require('../abi/productABI.js')
 var productContract = web3.eth.contract(productABI);
+var additionalInformation = "Additional Information";
 
 async.series([
   function(callback) {
@@ -70,6 +71,7 @@ async.series([
       it('Contract address should not be undefined', function(done) {
         productFactory.createProduct(
           productName,
+          additionalInformation,
           parentProducts,
           lon,
           lat,
@@ -112,6 +114,7 @@ async.series([
       it('Contract address should not be undefined', function(done) {
         productFactory.createProduct(
           productName,
+          additionalInformation,
           parentProducts,
           lon,
           lat,
@@ -150,6 +153,7 @@ async.series([
       product = productContract.at(database.products(0));
       let description = "Second action";
       let newProductsNames = [];
+      let newProductsAdditionalInformation = [];
       let consumed = false;
       let lon = 39.952583 * 10^10;
       let lat = -75.165222 * 10^10;
@@ -159,6 +163,7 @@ async.series([
           lon,
           lat,
           newProductsNames,
+          newProductsAdditionalInformation,
           consumed,
          {
            from: accounts[0],
@@ -181,6 +186,7 @@ async.series([
       product = productContract.at(database.products(0));
       let description = "Consuming action";
       let newProductsNames = ["SubProduct 1", "SubProduct 2"];
+      let newProductsAdditionalInformation = [additionalInformation, additionalInformation];
       let consumed = true;
       let lon = 39.952583 * 10^10;
       let lat = -75.165222 * 10^10;
@@ -190,6 +196,7 @@ async.series([
           lon,
           lat,
           newProductsNames,
+          newProductsAdditionalInformation,
           consumed,
          {
            from: accounts[0],
@@ -230,12 +237,14 @@ async.series([
       let subProduct2 = productContract.at(database.products(3));
       let otherProducts = [subProduct2.address];
       let newProductName = "SuperProduct";
+      let newProductAdditionalInformation = additionalInformation;
       let lon = 39.952583 * 10^10;
       let lat = -75.165222 * 10^10;
       it('Contract second action should not be undefined', function(done) {
         subProduct1.merge(
           otherProducts,
           newProductName,
+          newProductAdditionalInformation,
           lon,
           lat,
          {
