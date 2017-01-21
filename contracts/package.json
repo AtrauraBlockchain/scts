@@ -1,0 +1,25 @@
+{
+  "name": "contracts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "deploy/compileContracts.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "async": "^2.1.4",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "mocha": "^3.2.0",
+    "solc": "^0.4.8",
+    "web3": "^0.18.2"
+  },
+  "devDependencies": {
+    "grunt-node-inspector": "0.4.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "@anrodon",
+  "license": "GNU v3"
+}
