@@ -3,7 +3,7 @@ pragma solidity ^0.4.7;
 import "./Database.sol";
 
 /*
-    Copyright 2016, Andreu Rodríguez i Donaire
+    Copyright 2017, Andreu Rodríguez i Donaire
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ import "./Database.sol";
    @dev This contract represents a product to be tracked in the TODO put name of platform **
    platform. This product lets the handlers to register actions on it or even combine
    it with other products. */
-
 
  /* @dev Constructor for a Product */
 contract Product {
@@ -67,7 +66,7 @@ contract Product {
   // @dev indicates the name of a product.
   bytes32 public name;
 
-  // @dev indicates the name of a product.
+  // @dev Additional information about the Product, generally as a JSON object
   bytes32 public additionalInformation;
 
   // @dev all the actions which have been applied to the Product.
@@ -190,7 +189,7 @@ contract ProductFactory {
       throw;
     }
 
-    /* @notice Constructor to create a Product
+    /* @notice Function to create a Product
        @param _name The name of the Product
        @param _additionalInformation Additional information about the Product,
               generally as a JSON object.
