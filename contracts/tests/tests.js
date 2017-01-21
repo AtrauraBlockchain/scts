@@ -135,7 +135,7 @@ async.series([
       });
     });
     describe('Add a new action to Test Product 1.', function() {
-      product = web3.eth.contract(productABI).at(database.products(0));
+      product = web3.eth.contract(productABI).at(database.products(0), function(e, res) {console.log(e);});
       let description = "Second action";
       let newProductsNames = [];
       let consumed = false;
