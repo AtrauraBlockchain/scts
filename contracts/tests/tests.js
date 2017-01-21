@@ -272,6 +272,11 @@ async.series([
         expect(web3.toAscii(superProduct.name()).replace(/[^\w\s]/gi, '')).to.equal("SuperProduct");
         done();
       });
+      it('SuperProduct should be a son of SubProduct 1 and subProduct 2.', function(done) {
+        expect(subProduct1.childProducts(0).toString()).to.equal(database.products(4));
+        expect(subProduct2.childProducts(0).toString()).to.equal(database.products(4));
+        done();
+      });
     });
     callback();
   }
