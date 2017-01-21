@@ -16,7 +16,6 @@
     "web3": "^0.18.2"
   },
   "devDependencies": {
-    "grunt-node-inspector": "0.4.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
