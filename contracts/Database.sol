@@ -7,7 +7,7 @@ contract Database is owned {
   struct Handler {
     string _name;
     // JSON Object with additional information
-    string _additionalInfo;
+    string _additionalInformation;
   }
 
   mapping(address => Handler) public addressToHandler;
@@ -19,10 +19,10 @@ contract Database is owned {
     throw;
   }
 
-  function addHandler(address _address, string _name, string _additionalInfo) onlyOwner {
+  function addHandler(address _address, string _name, string _additionalInformation) onlyOwner {
     Handler memory handler;
     handler._name = _name;
-    handler._additionalInfo = _additionalInfo;
+    handler._additionalInformation = _additionalInformation;
 
     addressToHandler[_address] = handler;
   }

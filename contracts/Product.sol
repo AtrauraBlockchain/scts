@@ -61,16 +61,22 @@ contract Product {
   // @dev addresses of the products which were used to build this Product
   address[] public parentProducts;
 
+  // @dev indicates if a product has been consumed or not
   bool public isConsumed;
 
+  // @dev indicates the name of a product
   bytes32 public name;
+
+  // @dev indicates the name of a product
+  bytes32 public additionalInformation;
 
   Action[] public actions;
 
-  function Product(bytes32 _name, address[] _parentProducts, uint _lon, uint _lat, address db, address productFactory) {
+  function Product(bytes32 _name, bytes32 _additionalInformation, address[] _parentProducts, uint _lon, uint _lat, address db, address productFactory) {
     name = _name;
     isConsumed = false;
     parentProducts = _parentProducts;
+    additionalInformation = _additionalInformation;
 
     DATABASE_CONTRACT = db;
     PRODUCT_FACTORY = productFactory;
@@ -142,7 +148,7 @@ contract ProductFactory {
       throw;
     }
 
-    function createProduct(bytes32 _name, address[] _parentProducts, uint _lon, uint _lat, address db) returns(address) {
-      new Product(_name, _parentProducts, _lon, _lat, db, this);
+    function createProduct(bytes32 _name, bytes32 _additionalInformation, address[] _parentProducts, uint _lon, uint _lat, address db) returns(address) {
+      new Product(_name, _additionalInformation, _parentProducts, _lon, _lat, db, this);
     }
 }
