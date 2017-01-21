@@ -62,6 +62,28 @@ async.series([
     });
   },
   function(callback) {
+    describe('Add Handler to Database.', function() {
+      it('Transaction Hash should not be undefined', function(done) {
+        database.addHandler(
+          accounts[0],
+          "Demo Handler",
+          "This is an unreal Handler for demo purposes",
+         {
+           from: accounts[0],
+           gas: '4700000'
+         },
+         function (e, txHash){
+            done();
+            callback();
+         });
+      });
+      it('Handler must appear in the database.', function(done) {
+        expect(database.addressToHandler(accounts[0])[0]).to.equal('Demo Handler');
+        done();
+      });
+    });
+  },
+  function(callback) {
     describe('Create a product successfully.', function() {
       var product;
       var productName = "Test Product 1";
