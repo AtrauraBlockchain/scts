@@ -30,7 +30,7 @@ import "./Database.sol";
 contract Product {
   // @dev Reference to its database contract.
   address public DATABASE_CONTRACT;
-  // @dev Reference to its product factory
+  // @dev Reference to its product factory.
   address public PRODUCT_FACTORY;
 
   // @dev This struct represents an action realized by a handler on the product.
@@ -40,46 +40,60 @@ contract Product {
     //@dev description of the action.
     bytes32 description;
 
-    // @dev Longitude x10^10 where the Action is done
+    // @dev Longitude x10^10 where the Action is done.
     uint lon;
-    // @dev Latitude x10^10 where the Action is done
+    // @dev Latitude x10^10 where the Action is done.
     uint lat;
 
-    // @dev Instant of time when the Action is done
+    // @dev Instant of time when the Action is done.
     uint timestamp;
-    // @dev Block when the Action is done
+    // @dev Block when the Action is done.
     uint blockNumber;
   }
 
-  // @dev if the Product is consumed the transaction can't be done
+  // @dev if the Product is consumed the transaction can't be done.
   modifier notConsumed {
     if (isConsumed)
       throw;
     _;
   }
 
-  // @dev addresses of the products which were used to build this Product
+  // @dev addresses of the products which were used to build this Product.
   address[] public parentProducts;
 
-  // @dev indicates if a product has been consumed or not
+  // @dev indicates if a product has been consumed or not.
   bool public isConsumed;
 
-  // @dev indicates the name of a product
+  // @dev indicates the name of a product.
   bytes32 public name;
 
-  // @dev indicates the name of a product
+  // @dev indicates the name of a product.
   bytes32 public additionalInformation;
 
+  // @dev all the actions which have been applied to the Product.
   Action[] public actions;
 
-  function Product(bytes32 _name, bytes32 _additionalInformation, address[] _parentProducts, uint _lon, uint _lat, address db, address productFactory) {
+    /////////////////
+   // Constructor //
+  /////////////////
+
+  /* @notice Constructor to create a Product
+     @param _name The name of the Product
+     @param _additionalInformation Additional information about the Product,
+            generally as a JSON object.
+     @param _parentProducts Addresses of the parent products of the Product.
+     @param _lon Longitude x10^10 where the Product is created.
+     @param _lat Latitude x10^10 where the Product is created.
+     @param _DATABASE_CONTRACT Reference to its database contract
+     @param _PRODUCT_FACTORY Reference to its product factory */
+  function Product(bytes32 _name, bytes32 _additionalInformation, address[] _parentProducts, uint _lon, uint _lat, address _DATABASE_CONTRACT, address _PRODUCT_FACTORY) {
     name = _name;
     isConsumed = false;
     parentProducts = _parentProducts;
     additionalInformation = _additionalInformation;
 
-    DATABASE_CONTRACT = db;
-    PRODUCT_FACTORY = productFactory;
+    DATABASE_CONTRACT = _DATABASE_CONTRACT;
+    PRODUCT_FACTORY = _PRODUCT_FACTORY;
 
     Action memory creation;
     creation.handler = msg.sender;
@@ -91,7 +105,7 @@ contract Product {
 
     actions.push(creation);
 
-    Database database = Database(db);
+    Database database = Database(DATABASE_CONTRACT);
     database.storeProductReference(this);
   }
 
@@ -100,6 +114,15 @@ contract Product {
     throw;
   }
 
+  /* @notice Function to add an Action to the product.
+     @param _description The description of the Action.
+     @param _lon Longitude x10^10 where the Action is done.
+     @param _lat Latitude x10^10 where the Action is done.
+     @param _newProductNames In case that this Action creates more products from
+            this Product, the names of the new products should be provided here.
+     @param _newProductsAdditionalInformation In case that this Action creates more products from
+            this Product, the additional information of the new products should be provided here.
+     @param _consumed True if the product becomes consumed after the action. */
   function addAction(bytes32 description, uint lon, uint lat, bytes32[] newProductsNames, bytes32[] newProductsAdditionalInformation, bool _consumed) notConsumed {
     if (newProductsNames.length != newProductsAdditionalInformation.length) throw;
 
@@ -124,6 +147,12 @@ contract Product {
     isConsumed = _consumed;
   }
 
+  /* @notice Function to merge some products to build a new one.
+     @param otherProducts addresses of the other products to be merged.
+     @param newProductsName Name of the new product resulting of the merge.
+     @param newProductAdditionalInformation Additional information of the new product resulting of the merge.
+     @param _lon Longitude x10^10 where the merge is done.
+     @param _lat Latitude x10^10 where the merge is done. */
   function merge(address[] otherProducts, bytes32 newProductName, bytes32 newProductAdditionalInformation, uint lon, uint lat) notConsumed {
     ProductFactory productFactory = ProductFactory(PRODUCT_FACTORY);
     productFactory.createProduct(newProductName, newProductAdditionalInformation, otherProducts, lon, lat, DATABASE_CONTRACT);
@@ -136,13 +165,24 @@ contract Product {
     isConsumed = true;
   }
 
+  /* @notice Function to consume the Product */
   function consume() notConsumed {
     isConsumed = true;
   }
 }
 
+/* @title Product Factory Contract
+   @author Andreu Rodíguez i Donaire
+   @dev This contract represents a product factory which represents products to be tracked in
+   the TODO put name of platform ** platform. This product lets the handlers to register actions
+   on it or even combine it with other products. */
 contract ProductFactory {
 
+      /////////////////
+     // Constructor //
+    /////////////////
+
+    /* @notice Constructor to create a Product Factory */
     function ProductFactory() {}
 
     function () {
@@ -150,7 +190,15 @@ contract ProductFactory {
       throw;
     }
 
-    function createProduct(bytes32 _name, bytes32 _additionalInformation, address[] _parentProducts, uint _lon, uint _lat, address db) returns(address) {
-      new Product(_name, _additionalInformation, _parentProducts, _lon, _lat, db, this);
+    /* @notice Constructor to create a Product
+       @param _name The name of the Product
+       @param _additionalInformation Additional information about the Product,
+              generally as a JSON object.
+       @param _parentProducts Addresses of the parent products of the Product.
+       @param _lon Longitude x10^10 where the Product is created.
+       @param _lat Latitude x10^10 where the Product is created.
+       @param _DATABASE_CONTRACT Reference to its database contract */
+    function createProduct(bytes32 _name, bytes32 _additionalInformation, address[] _parentProducts, uint _lon, uint _lat, address DATABASE_CONTRACT) returns(address) {
+      new Product(_name, _additionalInformation, _parentProducts, _lon, _lat, DATABASE_CONTRACT, this);
     }
 }
