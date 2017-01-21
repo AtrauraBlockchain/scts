@@ -221,6 +221,10 @@ async.series([
         done();
       });
     });
+    mlog.log("Consumer action tested.");
+    callback();
+  },
+  function(callback) {
     describe('Merge SubProduct 1 and SubProduct 1 into SuperProduct.', function() {
       let subProduct1 = productContract.at(database.products(2));
       let subProduct2 = productContract.at(database.products(3));
