@@ -19,6 +19,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha tests --reporter spec"
+  },
   "author": "@anrodon",
   "license": "GNU v3"
 }
