@@ -1,6 +1,8 @@
 var async = require('async');
 var chaiAsPromised = require('chai-as-promised');
 var chai = require('chai');
+var mochaLogger = require('mocha-logger');
+var mlog = mochaLogger.mlog;
 var expect = chai.expect; // we are using the "expect" style of Chai
 chai.use(chaiAsPromised);
 var Web3 = require('web3');
@@ -97,6 +99,10 @@ async.series([
         expect(web3.toAscii(product.name()).replace(/[^\w\s]/gi, '')).to.equal(productName);
         done();
       });
+      it('Product\'s should not be consumed.', function(done) {
+        expect(product.isConsumed()).to.equal(false);
+        done();
+      });
     });
     describe('Create an other product successfully.', function() {
       productName = "Test Product 2";
@@ -136,47 +142,124 @@ async.series([
         done();
       });
     });
+    mlog.log("Product adding tested.");
+    callback();
+  },
+  function(callback) {
     describe('Add a new action to Test Product 1.', function() {
-      let productAddress;
-      async.series([
-        function(callback) {
-          database.products(0, function(err, res) {
-            productAddress = res;
-            callback();
-          });
-        },
-        function(callback) {
-          product = productContract.at(productAddress);
-          let description = "Second action";
-          let newProductsNames = [];
-          let consumed = false;
-          let lon = 39.952583 * 10^10;
-          let lat = -75.165222 * 10^10;
-          it('Contract second action should not be undefined', function(done) {
-            product.addAction(
-              description,
-              lon,
-              lat,
-              newProductsNames,
-              consumed,
-             {
-               from: accounts[0],
-               gas: '4700000'
-             },
-             function (e, txHash){
-                if (typeof txHash !== 'undefined') {
-                  done();
-                  callback();
-                }
-             });
-          });
-          it('Product\'s first action should be "Second Action".', function(done) {
-            let firstAction = product.actions(1);
-            expect(web3.toAscii(firstAction[1]).replace(/[^\w\s]/gi, '')).to.equal("Second action");
-            done();
-          });
-        }
-      ]);
+      product = productContract.at(database.products(0));
+      let description = "Second action";
+      let newProductsNames = [];
+      let consumed = false;
+      let lon = 39.952583 * 10^10;
+      let lat = -75.165222 * 10^10;
+      it('Contract second action transaction should not be undefined', function(done) {
+        product.addAction(
+          description,
+          lon,
+          lat,
+          newProductsNames,
+          consumed,
+         {
+           from: accounts[0],
+           gas: '4700000'
+         },
+         function (e, txHash){
+            if (typeof txHash !== 'undefined') {
+              done();
+              callback();
+            }
+         });
+      });
+      it('Product\'s second action should be "Second Action".', function(done) {
+        let secondAction = product.actions(1);
+        expect(web3.toAscii(secondAction[1]).replace(/[^\w\s]/gi, '')).to.equal("Second action");
+        done();
+      });
     });
+    describe('Add consuming action to Test Product 1.', function() {
+      product = productContract.at(database.products(0));
+      let description = "Consuming action";
+      let newProductsNames = ["SubProduct 1", "SubProduct 2"];
+      let consumed = true;
+      let lon = 39.952583 * 10^10;
+      let lat = -75.165222 * 10^10;
+      it('Contract consuming action transaction should not be undefined', function(done) {
+        product.addAction(
+          description,
+          lon,
+          lat,
+          newProductsNames,
+          consumed,
+         {
+           from: accounts[0],
+           gas: '4700000'
+         },
+         function (e, txHash){
+            if (typeof txHash !== 'undefined') {
+              done();
+              callback();
+            }
+         });
+      });
+      it('Product\'s second action should be "Consuming Action".', function(done) {
+        let consumingAction = product.actions(2);
+        expect(web3.toAscii(consumingAction[1]).replace(/[^\w\s]/gi, '')).to.equal("Consuming action");
+        done();
+      });
+      it('Product\'s should be consumed.', function(done) {
+        expect(product.isConsumed()).to.equal(true);
+        done();
+      });
+      it('Products "Subproduct 1" and "Subproduct 2" should be created.', function(done) {
+        let subProduct1 = productContract.at(database.products(2));
+        let subProduct2 = productContract.at(database.products(3));
+        expect(subProduct1).to.not.equal("undefined");
+        expect(web3.toAscii(subProduct1.name()).replace(/[^\w\s]/gi, '')).to.equal("SubProduct 1");
+        expect(subProduct2).to.not.equal("undefined");
+        expect(web3.toAscii(subProduct2.name()).replace(/[^\w\s]/gi, '')).to.equal("SubProduct 2");
+        done();
+      });
+    });
+    describe('Merge SubProduct 1 and SubProduct 1 into SuperProduct.', function() {
+      let subProduct1 = productContract.at(database.products(2));
+      let subProduct2 = productContract.at(database.products(3));
+      let otherProducts = [subProduct2.address];
+      let newProductName = "SuperProduct";
+      let lon = 39.952583 * 10^10;
+      let lat = -75.165222 * 10^10;
+      it('Contract second action should not be undefined', function(done) {
+        subProduct1.merge(
+          otherProducts,
+          newProductName,
+          lon,
+          lat,
+         {
+           from: accounts[0],
+           gas: '4700000'
+         },
+         function (e, txHash){
+            if (typeof txHash !== 'undefined') {
+              done();
+              callback();
+            }
+         });
+      });
+      /*it('SubProduct 1 should be consumed.', function(done) {
+        expect(subProduct1.isConsumed()).to.equal(true);
+        done();
+      });
+      it('SubProduct 2 should be consumed.', function(done) {
+        expect(subProduct2.isConsumed()).to.equal(true);
+        done();
+      });
+      it('SuperProduct should be created.', function(done) {
+        let superProduct = productContract.at(database.products(4));
+        expect(superProduct).to.not.equal("undefined");
+        expect(web3.toAscii(superProduct.name()).replace(/[^\w\s]/gi, '')).to.equal("SuperProduct");
+        done();
+      });*/
+    });
+    callback();
   }
 ]);

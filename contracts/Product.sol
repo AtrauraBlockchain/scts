@@ -90,6 +90,8 @@ contract Product {
       Product prod = Product(otherProducts[i]);
       prod.consume();
     }
+
+    isConsumed = true;
   }
 
   function consume() notConsumed {
