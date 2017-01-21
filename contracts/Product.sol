@@ -100,7 +100,7 @@ contract Product {
     throw;
   }
 
-  function addAction(bytes32 description, uint lon, uint lat, bytes32[] newProductsNames, bool _consumed) notConsumed {
+  function addAction(bytes32 description, uint lon, uint lat, bytes32[] newProductsNames, bytes32[] newProductsAdditionalInformation, bool _consumed) notConsumed {
     Action memory action;
     action.handler = msg.sender;
     action.description = description;
@@ -116,15 +116,15 @@ contract Product {
     for (uint i = 0; i < newProductsNames.length; ++i) {
       address[] memory parentProducts = new address[](1);
       parentProducts[0] = this;
-      productFactory.createProduct(newProductsNames[i], parentProducts, lon, lat, DATABASE_CONTRACT);
+      productFactory.createProduct(newProductsNames[i], newProductsAdditionalInformation[i], parentProducts, lon, lat, DATABASE_CONTRACT);
     }
 
     isConsumed = _consumed;
   }
 
-  function merge(address[] otherProducts, bytes32 newProductName, uint lon, uint lat) notConsumed {
+  function merge(address[] otherProducts, bytes32 newProductName, bytes32 newProductAdditionalInformation, uint lon, uint lat) notConsumed {
     ProductFactory productFactory = ProductFactory(PRODUCT_FACTORY);
-    productFactory.createProduct(newProductName, otherProducts, lon, lat, DATABASE_CONTRACT);
+    productFactory.createProduct(newProductName, newProductAdditionalInformation, otherProducts, lon, lat, DATABASE_CONTRACT);
 
     for (uint i = 0; i < otherProducts.length; ++i) {
       Product prod = Product(otherProducts[i]);
