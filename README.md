@@ -17,7 +17,7 @@ It's as easy as playing a game. SCTS is designed following game theories, so it 
 The Ropsten testnet contract address for the SCTS Database is `0xec9CAab87327Cf406Ba251cb4BcEbAFfcD794357`, here you can see more about the contract at [Etherscan](https://testnet.etherscan.io/address/0xec9caab87327cf406ba251cb4bcebaffcd794357).
 
 ## Where can I find more information about the SCTS Project?
-We'll be posting our website soon, be tuned!
+All about the project can be found at https://pathmatters.com/.
 
 ## License
 Copyright (C) 2017  SCTS - Supply Chain Tracking System
