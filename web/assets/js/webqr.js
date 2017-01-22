@@ -167,10 +167,17 @@ function processAddress(address){
                 isProduct(address, function(isProd){
                   if (isProd)  {
                     rendered = true;
-                    // TODO Render graph
-                    /*
-                    $('#tracker-content').append(graph);
-                    */
+                    $('#tracker-content').css('position', 'relative');
+
+                    $('#tracker-content').append('<div class="subway-map" id="subway-map" style="display: table-row-group;" data-columns="4" data-rows="12" data-cellSize="80" data-legendId="legend" data-textClass="text" data-gridNumbers="true" data-grid="false" data-lineWidth="4"></div>');
+                    $('#tracker-content').append('<div id="item-list" style="padding-top:40px; margin:0 -20px"></div>')
+
+                    getProducts(address);
+                    p=prepareData(address);
+                    generateMap(p);
+
+                    $(".subway-map").subwayMap();
+
                     console.log("I'm a product");
                     callback();
                   }
