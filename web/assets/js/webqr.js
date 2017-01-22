@@ -77,6 +77,9 @@ function read(address) {
               if (isProd)  {
                 rendered = true;
                 // TODO Render graph
+                /*
+                $('#tracker-content').append(graph);
+                */
                 console.log("I'm a product");
                 callback();
               }
