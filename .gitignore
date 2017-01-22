@@ -4,6 +4,7 @@ logs
 npm-debug.log*
 .idea
 .node*
+.DS_Store
 
 # Runtime data
 pids
