@@ -6,7 +6,6 @@ var gUM = false;
 var webkit = false;
 var moz = false;
 var v = null;
-var gStream = null;
 
 var vidhtml = '<video id="v" autoplay></video>';
 
@@ -25,7 +24,7 @@ function improveImage(imageData) {
 
     for(var i = 0; i < data.length; i += 4) {
 
-        if(data[i]>128&data[i+1]>128&data[i+2]>128){
+        if(data[i]>100&&data[i+1]>100&&data[i+2]>100){
 
             data[i]=255 ;
             data[i+1]=255 ;
@@ -66,8 +65,8 @@ function htmlEntities(str) {
 }
 
 function read(address) {
-    stopWebcam();
-    $('#qr-video').html('<div style="margin: 10px;"> \
+    $('#qr-video').css('display', 'none');
+    $('#tracker-content').append('<div style="margin: 10px;"> \
         <a href="https://testnet.etherscan.io/address/'+address+'">See transactions</a> \
         <h3>HANDLER: '+getHandler(address).name+'</h3> \
         </div>');
@@ -84,7 +83,6 @@ function isCanvasSupported() {
 }
 
 function success(stream) {
-    gStream = stream;
     if(webkit)
         v.src = window.URL.createObjectURL(stream);
     else if(moz) {
@@ -162,8 +160,4 @@ function setwebcam2(options) {
 
     stype=1;
     setTimeout(captureToCanvas, 500);
-}
-
-function stopWebcam(){
-    stream.stop();
 }
