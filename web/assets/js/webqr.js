@@ -172,11 +172,27 @@ function processAddress(address){
                     $('#tracker-content').append('<div class="subway-map" id="subway-map" style="display: table-row-group;" data-columns="4" data-rows="12" data-cellSize="80" data-legendId="legend" data-textClass="text" data-gridNumbers="true" data-grid="false" data-lineWidth="4"></div>');
                     $('#tracker-content').append('<div id="item-list" style="padding-top:40px; margin:0 -20px"></div>')
 
-                    getProducts(address);
-                    p=prepareData(address);
-                    generateMap(p);
+                    loadContracts();
+                    async.series([
+                       function(callback) {
+                           getProducts(address, function(){callback()});
 
-                    $(".subway-map").subwayMap();
+                       },
+                        function(callback) {
+                            p=prepareData(address);
+                            callback();
+                        },
+                        function(callback) {
+                          console.log("GenerateMap");
+                            generateMap(p);
+                            callback();
+                        },
+                        function(callback) {
+                          console.log("Subway Map");
+                            subwaymap({ debug: true }, $(".subway-map"));
+                            callback();
+                        }
+                    ]);
 
                     console.log("I'm a product");
                     callback();
