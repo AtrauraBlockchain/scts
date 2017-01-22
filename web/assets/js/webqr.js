@@ -41,27 +41,31 @@ function captureToCanvas() {
             try{
                 qrcode.decode();
             } catch(e) {
-                console.log(e);
+                setTimeout(captureToCanvas, 500);
             };
         } catch(e){
                 console.log(e);
+                setTimeout(captureToCanvas, 500);
         };
     }
-    setTimeout(captureToCanvas, 500);
 }
 
 function htmlEntities(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-function read(a) {
+function read(address) {
     $('#mainbody').remove();
-    $('#qr-canvas').remove();  
-    var html="<br>";
-    if(a.indexOf("http://") === 0 || a.indexOf("https://") === 0)
-        html+="<a target='_blank' href='"+a+"'>"+a+"</a><br>";
-    html+="<b>"+htmlEntities(a)+"</b><br><br>";
-    document.getElementById("result").innerHTML = html;
+    $('#qr-canvas').remove();
+    $('#tracker-content').innerHTML = '<div style="margin: 10px;"> \
+        <a href="https://testnet.etherscan.io/address/'+address+'>See transactions</a> \
+        <h3>HANDLER: '+getHandler(address).name+'</h3> \
+        </div>';
+    // var html="<br>";
+    // if(a.indexOf("http://") === 0 || a.indexOf("https://") === 0)
+    //     html+="<a target='_blank' href='"+a+"'>"+a+"</a><br>";
+    // html+="<b>"+htmlEntities(a)+"</b><br><br>";
+    // document.getElementById("result").innerHTML = html;
 }
 
 function isCanvasSupported() {
