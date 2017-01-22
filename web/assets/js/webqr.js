@@ -69,7 +69,7 @@ function read(address) {
     getHandler(address, function(err, res){
         $('#tracker-content').append('<div style="margin: 10px;"> \
             <a href="https://testnet.etherscan.io/address/'+address+'">See transactions</a> \
-            <h3>HANDLER: '+res.name+'</h3> \
+            <h3>HANDLER: '+res[0]+'</h3> \
             </div>');
     });
     // var html="<br>";
