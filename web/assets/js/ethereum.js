@@ -19,12 +19,29 @@ var isProduct = function(address, callback) {
   });
 }
 
-var getProduct = function(address, callback) {
-  async.series([
-    function(callback) {
-      isProduct(address, function(isProd) {
-        if (!isProd) callback('The address provided is not from a Product');
+var getActions = function(product, index, actions, callback) {
+  product.actions(index, function(err, res) {
+    if (res[0] == '0x') callback(err, actions);
+    else {
+      actions.push({'handler': res[0], 'description': web3.toAscii(res[1])});
+      addAction(product, ++index, actions, function(err, res) {
+        callback(err, res);
       });
     }
+  })
+};
+
+var getProduct = function(address, callback) {
+  let name;
+  let actions = [];
+  let parents = [];
+  async.series([
+    function(cb) {
+      isProduct(address, function(isProd) {
+        if (!isProd) callback('The address provided is not from a Product');
+        else cb();
+      });
+    },
+
   ]);
 }
