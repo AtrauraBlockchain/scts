@@ -32,22 +32,20 @@ var isProduct = function(address, callback) {
 }
 
 var getActions = function(product, index, actions, callback) {
-  product.actions(index, function(res) {
+  product.actions(index, function(err, res) {
     if (res[0] == '0x') callback(actions);
     else {
       actions.push({'handler': res[0], 'description': web3.toAscii(res[1])});
-      getActions(product, ++index, actions, function(res) {
-        callback(res);
-      });
+      getActions(product, ++index, actions, callback);
     }
   })
 };
 
 var getParentProducts = function(product, index, parents, callback) {
-  product.parentProducts(index, function(res) {
+  product.parentProducts(index, function(err, res) {
     if (res == '0x') callback(parents);
     else {
-      actions.push(res[0]);
+      parents.push(res);
       getParentProducts(product, ++index, parents, function(res) {
         callback(res);
       });
@@ -56,38 +54,32 @@ var getParentProducts = function(product, index, parents, callback) {
 };
 
 var getProduct = function(address, callback) {
-  let product;
+  let product = productContract.at(address);
   let name;
   let actions = [];
   let parentProducts = [];
+  let result = {};
   async.series([
     function(cb) {
-      isProduct(address, function(isProd) {
-        if (!isProd) callback('The address provided is not from a Product');
-        else {
-          product = productContract.at(address);
-          cb();
-        }
-      });
-    },
-    function(cb) {
-      getActions(product, 0, [], function(err, res) {
-        actions = res;
+      getActions(product, 0, [], function(res) {
+        result['actions'] = res;
         cb();
       });
     },
     function(cb) {
-      getParentProducts(product, 0, [], function(err, res) {
-        parentProducts = res;
+      getParentProducts(product, 0, [], function(res) {
+        result['parentProducts'] = res;
         cb();
       });
     },
     function(cb) {
       product.name(function(err, res) {
-        name = res;
+        result['name'] = res;
         cb();
       });
+    },
+    function(cb) {
+      callback('', result)
     }
   ]);
-  callback('', {'name': name, 'actions': actions, 'parentProducts': parentProducts});
 }
