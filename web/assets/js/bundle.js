@@ -1479,8 +1479,8 @@ module.exports = function createLogo (options_) {
   window.addEventListener('mousemove', function (ev) {
     if (followCursor) {
       var target = {
-        x: ev.clientY,
-        y: -ev.clientX,
+        x: ev.clientX,
+        y: ev.clientY,
       }
       setLookAt(target)
     }
@@ -1546,7 +1546,7 @@ module.exports = function createLogo (options_) {
 
   var computeMatrix = (function () {
     var objectCenter = new Float32Array(3)
-    var up = new Float32Array([1, 0, 0])
+    var up = new Float32Array([0, 1, 0])
     var projection = new Float32Array(16)
     var model = new Float32Array(16)
     var view = lookAt(
