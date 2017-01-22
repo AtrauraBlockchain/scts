@@ -6,6 +6,7 @@ var gUM = false;
 var webkit = false;
 var moz = false;
 var v = null;
+var gStream = null;
 
 var vidhtml = '<video id="v" autoplay></video>';
 
@@ -55,12 +56,11 @@ function htmlEntities(str) {
 }
 
 function read(address) {
-    $('#mainbody').remove();
-    $('#qr-canvas').remove();
-    $('#tracker-content').innerHTML = '<div style="margin: 10px;"> \
-        <a href="https://testnet.etherscan.io/address/'+address+'>See transactions</a> \
+    stopWebcam();
+    $('#qr-video').html('<div style="margin: 10px;"> \
+        <a href="https://testnet.etherscan.io/address/'+address+'">See transactions</a> \
         <h3>HANDLER: '+getHandler(address).name+'</h3> \
-        </div>';
+        </div>');
     // var html="<br>";
     // if(a.indexOf("http://") === 0 || a.indexOf("https://") === 0)
     //     html+="<a target='_blank' href='"+a+"'>"+a+"</a><br>";
@@ -74,8 +74,7 @@ function isCanvasSupported() {
 }
 
 function success(stream) {
-    console.log(stream);
-    console.log("Success setting up webcam");
+    gStream = stream;
     if(webkit)
         v.src = window.URL.createObjectURL(stream);
     else if(moz) {
@@ -87,7 +86,6 @@ function success(stream) {
 }
 
 function error(error) {
-    console.log("Erorrs occurring while setting up webcam");
     gUM=false;
     return;
 }
@@ -98,7 +96,6 @@ function load(){
 		qrcode.callback = read;
 		document.getElementById("mainbody").style.display="inline";
         setwebcam();
-        console.log("Setting webcam");
 	} else {
 		document.getElementById("mainbody").style.display="inline";
 		document.getElementById("mainbody").innerHTML='<p id="mp1">QR code scanner for HTML5 capable browsers</p><br>'+
@@ -118,7 +115,6 @@ function setwebcam() {
 				  if(device.label.toLowerCase().search("back") >-1)
 					options={'deviceId': {'exact':device.deviceId}, 'facingMode':'environment'} ;
 				}
-				console.log(device.kind + ": " + device.label +" id = " + device.deviceId);
 			  });
 			  setwebcam2(options);
 			});
@@ -127,21 +123,19 @@ function setwebcam() {
 		}
 	}
 	else{
-		console.log("no navigator.mediaDevices.enumerateDevices" );
 		setwebcam2(options);
 	}
 
 }
 
 function setwebcam2(options) {
-	console.log(options);
 	document.getElementById("result").innerHTML = "- scanning -";
 
     if(stype == 1) {
         setTimeout(captureToCanvas, 500);
         return;
     }
-    var n=navigator;
+    var n = navigator;
     document.getElementById("outdiv").innerHTML = vidhtml;
     v = document.getElementById("v");
 
@@ -158,5 +152,8 @@ function setwebcam2(options) {
 
     stype=1;
     setTimeout(captureToCanvas, 500);
-    console.log("Webcam setup finished.")
+}
+
+function stopWebcam(){
+    stream.stop();
 }
