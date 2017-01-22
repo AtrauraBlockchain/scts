@@ -27,22 +27,27 @@
 		<script src="assets/js/ethereum.js"></script>
 
 		<script>
-		var scanQR = function() {
-			$('#qr-video').append('\
-				<div id="mainbody"> \
-						<table class="tsel" border="0" width="100%"> \
-								<tr><td valign="top" align="center" width="50%"> \
-										<div id="outdiv"></div> \
-								</td></tr> \
-								<tr><td colspan="3" align="center"> \
-										<div id="result"></div> \
-								</td></tr> \
-						</table> \
-				</div> \
-				<canvas style="display: none;" id="qr-canvas" width="640" height="480"></canvas> \
-			');
-			load();
-		};
+			var scanQR = function() {
+				if($('#mainbody').length){
+					$('#qr-video').css('display', 'block');
+					$('#handler_information').remove();
+				} else {
+					$('#qr-video').append('\
+						<div id="mainbody"> \
+								<table class="tsel" border="0" width="100%"> \
+										<tr><td valign="top" align="center" width="50%"> \
+												<div id="outdiv"></div> \
+										</td></tr> \
+										<tr><td colspan="3" align="center"> \
+												<div id="result"></div> \
+										</td></tr> \
+								</table> \
+						</div> \
+						<canvas style="display: none;" id="qr-canvas" width="640" height="480"></canvas> \
+					');
+				}
+				load();
+			};
 		</script>
 
 	</head>

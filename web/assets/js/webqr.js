@@ -66,12 +66,14 @@ function htmlEntities(str) {
 
 function read(address) {
     $('#qr-video').css('display', 'none');
-    getHandler(address, function(err, res){
-        $('#tracker-content').append('<div style="margin: 10px;"> \
-            <a href="https://testnet.etherscan.io/address/'+address+'">See transactions</a> \
-            <h3>HANDLER: '+res[0]+'</h3> \
-            </div>');
-    });
+    if($('#handler_information').length == 0){
+        getHandler(address, function(err, res){
+            $('#tracker-content').append('<div style="margin: 10px;" id="handler_information"> \
+                <a href="https://testnet.etherscan.io/address/'+address+'">See transactions</a> \
+                <h3>HANDLER: '+res[0]+'</h3> \
+                </div>');
+        });
+    }
     // var html="<br>";
     // if(a.indexOf("http://") === 0 || a.indexOf("https://") === 0)
     //     html+="<a target='_blank' href='"+a+"'>"+a+"</a><br>";
