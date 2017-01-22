@@ -55,10 +55,13 @@
 			};
 
 			var type_text = function(){
-			    $('#qr-video').css('display', 'none');
-			    $('#address_field').css('display', 'block');
-				$('#results-content').html('');
-				processAddress($('#address_field').val());
+				if($('#address_field').css('display') == 'none'){
+					$('#qr-video').css('display', 'none');
+				    $('#address_field').css('display', 'block');
+					$('#results-content').html('');
+				}else{
+					processAddress($('#address_field').val());
+				}
 			}
 		</script>
 
