@@ -14,11 +14,9 @@ var isHandler = function(address, callback) {
 var getHandler = function(address, callback) {
   isHandler(address, function(isHand) {
     if (!isHand) callback('The address provided is not from a Product');
-    else {
-      database.addressToHandler(address, function(err, res) {
-        else callback(null, res);
-      });
-    }
+    database.addressToHandler(address, function(err, res) {
+      callback(null, res);
+    });
   })
 }
 
