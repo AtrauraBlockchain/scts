@@ -66,10 +66,12 @@ function htmlEntities(str) {
 
 function read(address) {
     $('#qr-video').css('display', 'none');
-    $('#tracker-content').append('<div style="margin: 10px;"> \
-        <a href="https://testnet.etherscan.io/address/'+address+'">See transactions</a> \
-        <h3>HANDLER: '+getHandler(address).name+'</h3> \
-        </div>');
+    getHandler(address, function(err, res){
+        $('#tracker-content').append('<div style="margin: 10px;"> \
+            <a href="https://testnet.etherscan.io/address/'+address+'">See transactions</a> \
+            <h3>HANDLER: '+res.name+'</h3> \
+            </div>');
+    });
     // var html="<br>";
     // if(a.indexOf("http://") === 0 || a.indexOf("https://") === 0)
     //     html+="<a target='_blank' href='"+a+"'>"+a+"</a><br>";
