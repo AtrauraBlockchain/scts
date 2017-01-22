@@ -74,8 +74,6 @@ function isCanvasSupported() {
 }
 
 function success(stream) {
-    console.log(stream);
-    console.log("Success setting up webcam");
     if(webkit)
         v.src = window.URL.createObjectURL(stream);
     else if(moz) {
@@ -98,7 +96,6 @@ function load(){
 		qrcode.callback = read;
 		document.getElementById("mainbody").style.display="inline";
         setwebcam();
-        console.log("Setting webcam");
 	} else {
 		document.getElementById("mainbody").style.display="inline";
 		document.getElementById("mainbody").innerHTML='<p id="mp1">QR code scanner for HTML5 capable browsers</p><br>'+
@@ -118,7 +115,6 @@ function setwebcam() {
 				  if(device.label.toLowerCase().search("back") >-1)
 					options={'deviceId': {'exact':device.deviceId}, 'facingMode':'environment'} ;
 				}
-				console.log(device.kind + ": " + device.label +" id = " + device.deviceId);
 			  });
 			  setwebcam2(options);
 			});
@@ -134,7 +130,6 @@ function setwebcam() {
 }
 
 function setwebcam2(options) {
-	console.log(options);
 	document.getElementById("result").innerHTML = "- scanning -";
 
     if(stype == 1) {
@@ -158,5 +153,4 @@ function setwebcam2(options) {
 
     stype=1;
     setTimeout(captureToCanvas, 500);
-    console.log("Webcam setup finished.")
 }
