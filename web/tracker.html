@@ -28,13 +28,12 @@
 
 		<script>
 			var scanQR = function() {
-				if($('#mainbody').length != 0){
-					$('#qr-video').css('display', 'block');
-				    $('#address_field').css('display', 'none');
-					$('#results-content').html('');
-					alreadyRead = false;
-					rendered = false;
-				} else {
+				$('#qr-video').css('display', 'block');
+				$('#address_field').css('display', 'none');
+				$('#results-content').html('');
+				alreadyRead = false;
+				rendered = false;
+				if($('#mainbody').length == 0){
 					$('#qr-video').append('\
 						<div id="mainbody"> \
 								<table class="tsel" border="0" width="100%"> \
