@@ -25,25 +25,15 @@ function improveImage(imageData) {
 
     for(var i = 0; i < data.length; i += 4) {
 
-        if(data[i]>128){
+        if(data[i]>128&data[i+1]>128&data[i+2]>128){
 
-            data[i]=256 ;
+            data[i]=255 ;
+            data[i+1]=255 ;
+            data[i+2]=255 ;
         }
         else{
             data[i]=0 ;
-        }
-        if(data[i+1]>128){
-            
-            data[i+1]=256 ;
-        }
-        else{
             data[i+1]=0 ;
-        }
-        if(data[i+2]>128){
-            
-            data[i+2]=256 ;
-        }
-        else{
             data[i+2]=0 ;
         }
 
