@@ -19,15 +19,25 @@ function initCanvas(w,h) {
     gCtx.clearRect(0, 0, w, h);
 }
 
-function contrastImage(imageData, contrast) {
+function improveImage(imageData) {
     var data = imageData.data;
-    var factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
 
     for(var i = 0; i < data.length; i += 4) {
-        data[i] = factor * (data[i] - 128) + 128;
-        data[i+1] = factor * (data[i+1] - 128) + 128;
-        data[i+2] = factor * (data[i+2] - 128) + 128;
+
+        if(data[i]>128&data[i+1]>128&data[i+2]>128){
+
+            data[i]=255 ;
+            data[i+1]=255 ;
+            data[i+2]=255 ;
+        }
+        else{
+            data[i]=0 ;
+            data[i+1]=0 ;
+            data[i+2]=0 ;
+        }
+
     }
+
     return imageData;
 }
 
@@ -37,7 +47,7 @@ function captureToCanvas() {
     if(gUM) {
         try{
             gCtx.drawImage(v, 0, 0);
-            // gCtx.putImageData(contrastImage(gCtx.getImageData(0, 0, 640, 480), 100), 0, 0);
+            gCtx.putImageData(improveImage(gCtx.getImageData(0, 0, 640, 480)), 0, 0);
             try{
                 qrcode.decode();
             } catch(e) {
