@@ -151,7 +151,7 @@ function setwebcam2(options) {
 }
 
 function processAddress(address){
-    console.log(addresss);
+    console.log(address);
     $('#qr-video').css('display', 'none');
     $('#address_field').css('display', 'none');
     if($('#handler_information').length == 0 && !alreadyRead){
