@@ -15,7 +15,7 @@ var getHandler = function(address, callback) {
   isHandler(address, function(isHand) {
     if (!isHand) callback('The address provided is not from a Product');
     database.addressToHandler(address, function(err, res) {
-      callback(null, res);
+      callback('', res);
     });
   })
 }
@@ -33,19 +33,19 @@ var getActions = function(product, index, actions, callback) {
     if (res[0] == '0x') callback(actions);
     else {
       actions.push({'handler': res[0], 'description': web3.toAscii(res[1])});
-      addAction(product, ++index, actions, function(res) {
+      getActions(product, ++index, actions, function(res) {
         callback(res);
       });
     }
   })
 };
 
-var getActions = function(product, index, actions, callback) {
-  product.actions(index, function(res) {
-    if (res[0] == '0x') callback(actions);
+var getParentProducts = function(product, index, parents, callback) {
+  product.parentProducts(index, function(res) {
+    if (res == '0x') callback(parents);
     else {
-      actions.push({'handler': res[0], 'description': web3.toAscii(res[1])});
-      addAction(product, ++index, actions, function(res) {
+      actions.push(res[0]);
+      getParentProducts(product, ++index, parents, function(res) {
         callback(res);
       });
     }
@@ -54,8 +54,9 @@ var getActions = function(product, index, actions, callback) {
 
 var getProduct = function(address, callback) {
   let product;
+  let name;
   let actions = [];
-  let parents = [];
+  let parentProducts = [];
   async.series([
     function(cb) {
       isProduct(address, function(isProd) {
@@ -71,7 +72,19 @@ var getProduct = function(address, callback) {
         actions = res;
         cb();
       });
+    },
+    function(cb) {
+      getParentProducts(product, 0, [], function(err, res) {
+        parentProducts = res;
+        cb();
+      });
+    },
+    function(cb) {
+      product.name(function(err, res) {
+        name = res;
+        cb();
+      });
     }
   ]);
-  callback(null, actions);
+  callback('', {'name': name, 'actions': actions, 'parentProducts': parentProducts});
 }
