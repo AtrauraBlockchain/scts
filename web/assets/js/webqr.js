@@ -68,39 +68,6 @@ function htmlEntities(str) {
 
 function read(address) {
     $('#qr-video').css('display', 'none');
-    if($('#results-content').length == 0 && !alreadyRead){
-        alreadyRead = true;
-        rendered = false;
-        async.series([
-          function(callback) {
-            isProduct(address, function(isProd){
-              if (isProd)  {
-                rendered = true;
-                // TODO Render graph
-                /*
-                $('#tracker-content').append(graph);
-                */
-                console.log("I'm a product");
-                callback();
-              }
-              else callback();
-            });
-          },
-          function(callback) {
-            if (!rendered) {
-              getHandler(address, function(err, res){
-                if (!err) {
-                  $('#tracker-content').append('<div style="margin: 10px;" id="handler_information"> \
-                      <h3><strong>HANDLER NAME:</strong> '+res[0]+'</h3> \
-                      <a href="https://testnet.etherscan.io/address/'+address+'">See his transactions</a> \
-                      </div>');
-                }
-                alreadyRead = false;
-              });
-            } else rendered = false;
-          }
-        ]);
-    }
     processAdress(address);
 }
 
@@ -185,13 +152,37 @@ function setwebcam2(options) {
 }
 
 function processAdress(address){
-    $('#qr-video').css('display', 'none');
-    if($('#handler_information').length == 0){
-        getHandler(address, function(err, res){
-            $('#results-content').append('<div style="margin: 10px;" id="handler_information"> \
-                <a href="https://testnet.etherscan.io/address/'+address+'">See transactions</a> \
-                <h3>HANDLER: '+res[0]+'</h3> \
-                </div>');
-        });
+    if($('#results-content').length == 0 && !alreadyRead){
+        alreadyRead = true;
+        rendered = false;
+        async.series([
+          function(callback) {
+            isProduct(address, function(isProd){
+              if (isProd)  {
+                rendered = true;
+                // TODO Render graph
+                /*
+                $('#tracker-content').append(graph);
+                */
+                console.log("I'm a product");
+                callback();
+              }
+              else callback();
+            });
+          },
+          function(callback) {
+            if (!rendered) {
+              getHandler(address, function(err, res){
+                if (!err) {
+                  $('#tracker-content').append('<div style="margin: 10px;" id="handler_information"> \
+                      <h3><strong>HANDLER NAME:</strong> '+res[0]+'</h3> \
+                      <a href="https://testnet.etherscan.io/address/'+address+'">See his transactions</a> \
+                      </div>');
+                }
+                alreadyRead = false;
+              });
+            } else rendered = false;
+          }
+        ]);
     }
 }
