@@ -7,6 +7,7 @@ var webkit = false;
 var moz = false;
 var v = null;
 var alreadyRead = false;
+var rendered = false;
 
 var vidhtml = '<video id="v" autoplay></video>';
 
@@ -67,17 +68,35 @@ function htmlEntities(str) {
 
 function read(address) {
     $('#qr-video').css('display', 'none');
-    if($('#handler_information').length == 0){
+    if($('#handler_information').length == 0 && !alreadyRead){
         alreadyRead = true;
-        getHandler(address, function(err, res){
-            if (!err) {
-            $('#tracker-content').append('<div style="margin: 10px;" id="handler_information"> \
-                <h3><strong>HANDLER NAME:</strong> '+res[0]+'</h3> \
-                <a href="https://testnet.etherscan.io/address/'+address+'">See his transactions</a> \
-                </div>');
-            }
-            alreadyRead = false;
-        });
+        rendered = false;
+        async.series([
+          function(callback) {
+            isProduct(address, function(isProd){
+              if (isProd)  {
+                rendered = true;
+                // TODO Render graph
+                console.log("I'm a product");
+                callback();
+              }
+              else callback();
+            });
+          },
+          function(callback) {
+            if (!rendered) {
+              getHandler(address, function(err, res){
+                if (!err) {
+                  $('#tracker-content').append('<div style="margin: 10px;" id="handler_information"> \
+                      <h3><strong>HANDLER NAME:</strong> '+res[0]+'</h3> \
+                      <a href="https://testnet.etherscan.io/address/'+address+'">See his transactions</a> \
+                      </div>');
+                }
+                alreadyRead = false;
+              });
+            } else rendered = false;
+          }
+        ]);
     }
     // var html="<br>";
     // if(a.indexOf("http://") === 0 || a.indexOf("https://") === 0)
