@@ -30,25 +30,25 @@ function improveImage(imageData) {
             data[i]=256 ;
         }
         else{
-            dat[i]=0 ;
+            data[i]=0 ;
         }
         if(data[i+1]>128){
             
             data[i+1]=256 ;
         }
         else{
-            dat[i+1]=0 ;
+            data[i+1]=0 ;
         }
         if(data[i+2]>128){
             
             data[i+2]=256 ;
         }
         else{
-            dat[i+2]=0 ;
+            data[i+2]=0 ;
         }
 
     }
-    
+
     return imageData;
 }
 
