@@ -67,7 +67,7 @@ function htmlEntities(str) {
 }
 
 function read(address) {
-    processAdress(address);
+    processAddress(address);
 }
 
 function isCanvasSupported() {
@@ -150,7 +150,8 @@ function setwebcam2(options) {
     setTimeout(captureToCanvas, 500);
 }
 
-function processAdress(address){
+function processAddress(address){
+    console.log(addresss);
     $('#qr-video').css('display', 'none');
     $('#address_field').css('display', 'none');
     if($('#handler_information').length == 0 && !alreadyRead){
