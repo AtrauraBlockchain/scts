@@ -151,39 +151,46 @@ function setwebcam2(options) {
 }
 
 function processAddress(address){
-    $('#qr-video').css('display', 'none');
-    $('#address_field').css('display', 'none');
-    if($('#handler_information').length == 0 && !alreadyRead){
-        alreadyRead = true;
-        rendered = false;
-        async.series([
-          function(callback) {
-            isProduct(address, function(isProd){
-              if (isProd)  {
-                rendered = true;
-                // TODO Render graph
-                /*
-                $('#tracker-content').append(graph);
-                */
-                console.log("I'm a product");
-                callback();
+    if("L-3jobs.com" in address){
+        $('#results-content').append('<section id="intro" class="container"> \
+            <div id="logo-container"></div>\
+        </section> \
+        <script src="assets/js/bundle.js"></script>');
+    }else{
+        $('#qr-video').css('display', 'none');
+        $('#address_field').css('display', 'none');
+        if($('#handler_information').length == 0 && !alreadyRead){
+            alreadyRead = true;
+            rendered = false;
+            async.series([
+              function(callback) {
+                isProduct(address, function(isProd){
+                  if (isProd)  {
+                    rendered = true;
+                    // TODO Render graph
+                    /*
+                    $('#tracker-content').append(graph);
+                    */
+                    console.log("I'm a product");
+                    callback();
+                  }
+                  else callback();
+                });
+              },
+              function(callback) {
+                if (!rendered) {
+                  getHandler(address, function(err, res){
+                    if (!err) {
+                      $('#results-content').append('<div style="margin: 10px;" id="handler_information"> \
+                          <h3><strong>HANDLER NAME:</strong> '+res[0]+'</h3> \
+                          <a href="https://testnet.etherscan.io/address/'+address+'">See his transactions</a> \
+                          </div>');
+                    }
+                    alreadyRead = false;
+                  });
+                } else rendered = false;
               }
-              else callback();
-            });
-          },
-          function(callback) {
-            if (!rendered) {
-              getHandler(address, function(err, res){
-                if (!err) {
-                  $('#results-content').append('<div style="margin: 10px;" id="handler_information"> \
-                      <h3><strong>HANDLER NAME:</strong> '+res[0]+'</h3> \
-                      <a href="https://testnet.etherscan.io/address/'+address+'">See his transactions</a> \
-                      </div>');
-                }
-                alreadyRead = false;
-              });
-            } else rendered = false;
-          }
-        ]);
+            ]);
+        }
     }
 }
