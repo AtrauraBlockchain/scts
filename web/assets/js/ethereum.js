@@ -10,3 +10,21 @@ var isHandler = function(address, callback) {
     else callback(true);
   });
 }
+
+var isProduct = function(address, callback) {
+  let product = productContract.at(address);
+  product.name(function(err, res) {
+      if (res == '0x') callback(false);
+      else callback(true);
+  });
+}
+
+var getProduct = function(address, callback) {
+  async.series([
+    function(callback) {
+      isProduct(address, function(isProd) {
+        if (!isProd) callback('The address provided is not from a Product');
+      });
+    }
+  ]);
+}
