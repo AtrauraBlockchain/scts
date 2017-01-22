@@ -19,8 +19,8 @@
 		<script src="assets/js/jquery.scrolly.min.js"></script>
 		<script src="assets/js/jquery.scrollgress.min.js"></script>
 
-    <script type="text/javascript" src="assets/js/llqrcode.js"></script>
-    <script type="text/javascript" src="assets/js/webqr.js"></script>
+	    <script type="text/javascript" src="assets/js/llqrcode.js"></script>
+	    <script type="text/javascript" src="assets/js/webqr.js"></script>
 
 		<script src="assets/js/ProductABI.js"></script>
 		<script src="assets/js/DatabaseABI.js"></script>
@@ -30,7 +30,7 @@
 			var scanQR = function() {
 				if($('#mainbody').length){
 					$('#qr-video').css('display', 'block');
-					$('#handler_information').remove();
+					$('#results-content').html('');
 				} else {
 					$('#qr-video').append('\
 						<div id="mainbody"> \
@@ -48,6 +48,11 @@
 				}
 				load();
 			};
+
+			var type_text = function(){
+				$('#results-content').html('');
+				processAdress($('#address_field').val());
+			}
 		</script>
 
 	</head>
@@ -87,43 +92,40 @@
 			<header id="tracker-content" class="special container">
 				<img style="margin-top: -200px;" src="https://s24.postimg.org/t6rucdmid/ETHEREUM_YOUTUBE_PROFILE_PIC.png" />
 				<script>
-				setTimeout(function () {}, 200);
-				if (typeof web3 !== 'undefined') {
-					loadContracts();
-					$('#tracker-content').append('\
-						<div style="margin: 10px"> \
-							<p><p> \
-							<h4>Introduce an address</h4> \
-							<input style="margin: 10px; margin-top: 70px;" type="text" placeholder="Product or Handler address" class="focus"> \
-							<input style="margin: 10px" type="submit" value="Search"> \
-							<input style="margin: 10px" type="submit" onClick="scanQR()" value="Scan QR Code"> \
-							<div id="qr-video"></div> \
-						</div> \
-					');
-				} else {
-					$('#tracker-content').append('\
-					<h1>You need an Ethereum powered browser to use this feature</h1> \
-					<h3>Use <strong><a href="https://github.com/ethereum/mist/releases">Mist</a></strong> or the <strong><a href="https://metamask.io/">Metamask</a></strong> plugin</h3> \
-					');
-				}
+					setTimeout(function () {}, 200);
+					if (typeof web3 !== 'undefined') {
+						loadContracts();
+						$('#tracker-content').append('\
+							<div style="margin: 10px"> \
+								<p><p> \
+								<h4>Introduce an address</h4> \
+								<input style="margin: 10px; margin-top: 70px;" type="text" id="address_field" placeholder="Product or Handler address" class="focus"> \
+								<input style="margin: 10px" type="submit" onclick="type_text()" value="Search"> \
+								<input style="margin: 10px" type="submit" onClick="scanQR()" value="Scan QR Code"> \
+								<div id="qr-video"></div> \
+								<div id="results-content"></div> \
+							</div> \
+						');
+					} else {
+						$('#tracker-content').append('\
+						<h1>You need an Ethereum powered browser to use this feature</h1> \
+						<h3>Use <strong><a href="https://github.com/ethereum/mist/releases">Mist</a></strong> or the <strong><a href="https://metamask.io/">Metamask</a></strong> plugin</h3> \
+						');
+					}
 				</script>
-<div style="margin: 10px">		<p><p>
-</div>
 		</header>
 
 
-			<!-- Footer -->
-				<footer id="footer">
+		<!-- Footer -->
+		<footer id="footer">
+			<li><a href="https://github.com/anrodon/tracking-blockchain" class="icon circle fa-github"><span class="label">Github</span></a>
+			</li>
+			</ul>
 
-		<li><a href="https://github.com/anrodon/tracking-blockchain" class="icon circle fa-github"><span class="label">Github</span></a>
-		</li>
-		</ul>
-
-		<ul class="copyright">
-			<li>&copy; SCTS - Supply Chain Tracking System</li>
-			<li>2017</li>
-		</ul>
-
+			<ul class="copyright">
+				<li>&copy; SCTS - Supply Chain Tracking System</li>
+				<li>2017</li>
+			</ul>
 		</footer>
 
 		</div>

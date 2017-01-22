@@ -68,7 +68,7 @@ function htmlEntities(str) {
 
 function read(address) {
     $('#qr-video').css('display', 'none');
-    if($('#handler_information').length == 0 && !alreadyRead){
+    if($('#results-content').length == 0 && !alreadyRead){
         alreadyRead = true;
         rendered = false;
         async.series([
@@ -101,11 +101,7 @@ function read(address) {
           }
         ]);
     }
-    // var html="<br>";
-    // if(a.indexOf("http://") === 0 || a.indexOf("https://") === 0)
-    //     html+="<a target='_blank' href='"+a+"'>"+a+"</a><br>";
-    // html+="<b>"+htmlEntities(a)+"</b><br><br>";
-    // document.getElementById("result").innerHTML = html;
+    processAdress(address);
 }
 
 function isCanvasSupported() {
@@ -135,11 +131,6 @@ function load(){
 		qrcode.callback = read;
 		document.getElementById("mainbody").style.display="inline";
         setwebcam();
-	} else {
-		document.getElementById("mainbody").style.display="inline";
-		document.getElementById("mainbody").innerHTML='<p id="mp1">QR code scanner for HTML5 capable browsers</p><br>'+
-        '<br><p id="mp2">sorry your browser is not supported</p><br><br>'+
-        '<p id="mp1">try <a href="http://www.mozilla.com/firefox"><img src="firefox.png"/></a> or <a href="http://chrome.google.com"><img src="chrome_logo.gif"/></a> or <a href="http://www.opera.com"><img src="Opera-logo.png"/></a></p>';
 	}
 }
 
@@ -191,4 +182,16 @@ function setwebcam2(options) {
 
     stype=1;
     setTimeout(captureToCanvas, 500);
+}
+
+function processAdress(address){
+    $('#qr-video').css('display', 'none');
+    if($('#handler_information').length == 0){
+        getHandler(address, function(err, res){
+            $('#results-content').append('<div style="margin: 10px;" id="handler_information"> \
+                <a href="https://testnet.etherscan.io/address/'+address+'">See transactions</a> \
+                <h3>HANDLER: '+res[0]+'</h3> \
+                </div>');
+        });
+    }
 }
