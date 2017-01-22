@@ -30,7 +30,10 @@
 			var scanQR = function() {
 				if($('#mainbody').length){
 					$('#qr-video').css('display', 'block');
+				    $('#address_field').css('display', 'none');
 					$('#results-content').html('');
+					alreadyRead = false;
+					rendered = false;
 				} else {
 					$('#qr-video').append('\
 						<div id="mainbody"> \
@@ -52,10 +55,9 @@
 			};
 
 			var type_text = function(){
+			    $('#qr-video').css('display', 'none');
+			    $('#address_field').css('display', 'block');
 				$('#results-content').html('');
-				$('#qr-video').css('display', 'none');
-				alreadyRead = false;
-				rendered = false;
 				processAdress($('#address_field').val());
 			}
 		</script>

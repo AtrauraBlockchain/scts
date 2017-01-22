@@ -67,7 +67,6 @@ function htmlEntities(str) {
 }
 
 function read(address) {
-    $('#qr-video').css('display', 'none');
     processAdress(address);
 }
 
@@ -152,7 +151,9 @@ function setwebcam2(options) {
 }
 
 function processAdress(address){
-    if($('#results-content').length == 0 && !alreadyRead){
+    $('#qr-video').css('display', 'none');
+    $('#address_field').css('display', 'none');
+    if($('#handler_information').length == 0 && !alreadyRead){
         alreadyRead = true;
         rendered = false;
         async.series([
