@@ -6,6 +6,7 @@ var gUM = false;
 var webkit = false;
 var moz = false;
 var v = null;
+var alreadyRead = false;
 
 var vidhtml = '<video id="v" autoplay></video>';
 
@@ -47,7 +48,7 @@ function captureToCanvas() {
     if(gUM) {
         try{
             gCtx.drawImage(v, 0, 0);
-            gCtx.putImageData(improveImage(gCtx.getImageData(0, 0, 640, 480)), 0, 0);
+            //gCtx.putImageData(improveImage(gCtx.getImageData(0, 0, 640, 480)), 0, 0);
             try{
                 qrcode.decode();
             } catch(e) {
@@ -67,11 +68,15 @@ function htmlEntities(str) {
 function read(address) {
     $('#qr-video').css('display', 'none');
     if($('#handler_information').length == 0){
+        alreadyRead = true;
         getHandler(address, function(err, res){
+            if (!err) {
             $('#tracker-content').append('<div style="margin: 10px;" id="handler_information"> \
-                <a href="https://testnet.etherscan.io/address/'+address+'">See transactions</a> \
-                <h3>HANDLER: '+res[0]+'</h3> \
+                <h3><strong>HANDLER NAME:</strong> '+res[0]+'</h3> \
+                <a href="https://testnet.etherscan.io/address/'+address+'">See his transactions</a> \
                 </div>');
+            }
+            alreadyRead = false;
         });
     }
     // var html="<br>";
