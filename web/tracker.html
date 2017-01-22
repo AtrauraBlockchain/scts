@@ -17,6 +17,28 @@
 		<script src="assets/js/jquery.scrolly.min.js"></script>
 		<script src="assets/js/jquery.scrollgress.min.js"></script>
 
+    <script type="text/javascript" src="assets/js/llqrcode.js"></script>
+    <script type="text/javascript" src="assets/js/webqr.js"></script>
+
+		<script>
+		var scanQR = function() {
+			$('#qr-video').append('\
+				<div id="mainbody"> \
+						<table class="tsel" border="0" width="100%"> \
+								<tr><td valign="top" align="center" width="50%"> \
+										<div id="outdiv"></div> \
+								</td></tr> \
+								<tr><td colspan="3" align="center"> \
+										<div id="result"></div> \
+								</td></tr> \
+						</table> \
+				</div> \
+				<canvas style="display: none;" id="qr-canvas" width="640" height="480"></canvas> \
+			');
+			load();
+		};
+		</script>
+
 	</head>
 	<body class="index">
 		<div id="page-wrapper">
@@ -53,7 +75,6 @@
 
 			<header id="tracker-content" class="special container">
 				<img style="margin-top: -200px;" src="https://s24.postimg.org/t6rucdmid/ETHEREUM_YOUTUBE_PROFILE_PIC.png" />
-
 				<script>
 				if (typeof web3 !== 'undefined') {
 					$('#tracker-content').append('\
@@ -62,6 +83,8 @@
 							<h4>Introduce an address</h4> \
 							<input style="margin: 10px; margin-top: 70px;" type="text" placeholder="Product or Handler address" class="focus"> \
 							<input style="margin: 10px" type="submit" value="Search"> \
+							<input style="margin: 10px" type="submit" onClick="scanQR()" value="Scan QR Code"> \
+							<div id="qr-video"></div> \
 						</div> \
 					');
 				} else {
