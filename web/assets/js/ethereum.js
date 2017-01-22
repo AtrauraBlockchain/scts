@@ -11,6 +11,17 @@ var isHandler = function(address, callback) {
   });
 }
 
+var getHandler = function(address, callback) {
+  isHandler(address, function(isHand) {
+    if (!isHand) callback('The address provided is not from a Product');
+    else {
+      database.addressToHandler(address, function(err, res) {
+        else callback(null, res);
+      });
+    }
+  })
+}
+
 var isProduct = function(address, callback) {
   let product = productContract.at(address);
   product.name(function(err, res) {
@@ -20,28 +31,49 @@ var isProduct = function(address, callback) {
 }
 
 var getActions = function(product, index, actions, callback) {
-  product.actions(index, function(err, res) {
-    if (res[0] == '0x') callback(err, actions);
+  product.actions(index, function(res) {
+    if (res[0] == '0x') callback(actions);
     else {
       actions.push({'handler': res[0], 'description': web3.toAscii(res[1])});
-      addAction(product, ++index, actions, function(err, res) {
-        callback(err, res);
+      addAction(product, ++index, actions, function(res) {
+        callback(res);
+      });
+    }
+  })
+};
+
+var getActions = function(product, index, actions, callback) {
+  product.actions(index, function(res) {
+    if (res[0] == '0x') callback(actions);
+    else {
+      actions.push({'handler': res[0], 'description': web3.toAscii(res[1])});
+      addAction(product, ++index, actions, function(res) {
+        callback(res);
       });
     }
   })
 };
 
 var getProduct = function(address, callback) {
-  let name;
+  let product;
   let actions = [];
   let parents = [];
   async.series([
     function(cb) {
       isProduct(address, function(isProd) {
         if (!isProd) callback('The address provided is not from a Product');
-        else cb();
+        else {
+          product = productContract.at(address);
+          cb();
+        }
       });
     },
-
+    function(cb) {
+      getActions(product, 0, [], function(err, res) {
+        actions = res;
+        cb();
+      });
+    }
   ]);
+  callback(null, actions);
 }
