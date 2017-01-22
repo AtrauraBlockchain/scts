@@ -24,7 +24,7 @@ function improveImage(imageData) {
 
     for(var i = 0; i < data.length; i += 4) {
 
-        if(data[i]>128&data[i+1]>128&data[i+2]>128){
+        if(data[i]>100&&data[i+1]>100&&data[i+2]>100){
 
             data[i]=255 ;
             data[i+1]=255 ;
