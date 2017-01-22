@@ -174,7 +174,7 @@ function processAdress(address){
             if (!rendered) {
               getHandler(address, function(err, res){
                 if (!err) {
-                  $('#tracker-content').append('<div style="margin: 10px;" id="handler_information"> \
+                  $('#results-content').append('<div style="margin: 10px;" id="handler_information"> \
                       <h3><strong>HANDLER NAME:</strong> '+res[0]+'</h3> \
                       <a href="https://testnet.etherscan.io/address/'+address+'">See his transactions</a> \
                       </div>');

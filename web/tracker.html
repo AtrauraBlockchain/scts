@@ -46,11 +46,16 @@
 						<canvas style="display: none;" id="qr-canvas" width="640" height="480"></canvas> \
 					');
 				}
+				alreadyRead = false;
+				rendered = false;
 				load();
 			};
 
 			var type_text = function(){
 				$('#results-content').html('');
+				$('#qr-video').css('display', 'none');
+				alreadyRead = false;
+				rendered = false;
 				processAdress($('#address_field').val());
 			}
 		</script>
@@ -88,7 +93,6 @@
 
 		<!-- Main -->
 		<article id="main">
-
 			<header id="tracker-content" class="special container">
 				<img style="margin-top: -200px;" src="https://s24.postimg.org/t6rucdmid/ETHEREUM_YOUTUBE_PROFILE_PIC.png" />
 				<script>
@@ -137,5 +141,4 @@
 		<script src="assets/js/main.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/async/2.1.4/async.js"></script>
 		</body>
-
 </html>
