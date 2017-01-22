@@ -151,7 +151,7 @@ function setwebcam2(options) {
 }
 
 function processAddress(address){
-    if(address.indexOf("L-3jobs.com") != -1){
+    if(address.toLowerCase().indexOf("www.l-3jobs.com") != -1){
         $('#results-content').append('<section id="intro" class="container"> \
             <div id="logo-container"></div>\
         </section> \
