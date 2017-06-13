@@ -3,7 +3,7 @@ pragma solidity ^0.4.7;
 import "./owned.sol";
 
 /*
-  Copyright 2017, Andreu Rodríguez i Donaire
+  Copyright 2017, David Riudor
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ import "./owned.sol";
 */
 
 /* @title Database Contract
-  @author Andreu Rodíguez i Donaire
+  @author David Riudor
   @dev This contract represents the database to store all handlers and products of the
   TODO put name of platform ** platform.  */
 
