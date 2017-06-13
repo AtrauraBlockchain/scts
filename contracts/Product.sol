@@ -3,7 +3,7 @@ pragma solidity ^0.4.7;
 import "./Database.sol";
 
 /*
-    Copyright 2017, Andreu Rodríguez i Donaire
+    Copyright 2017, David Riudor
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ import "./Database.sol";
  */
 
 /* @title Product Contract
-   @author Andreu Rodíguez i Donaire
+   @author David Riudor
    @dev This contract represents a product to be tracked in the TODO put name of platform **
    platform. This product lets the handlers to register actions on it or even combine
    it with other products. */
